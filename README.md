@@ -65,6 +65,40 @@ resources
     SubscriptionId = subscriptionId
 ```
 
+### List all Snapshots
+```kql
+Resources
+| where type == "microsoft.compute/snapshots"
+| project 
+    SnapshotName = name,
+    ResourceGroup = resourceGroup,
+    Location = location,
+    SubscriptionId = subscriptionId,
+    DiskSizeGB = properties.diskSizeGB,
+    StorageType = sku.name,
+    TimeCreated = properties.timeCreated,
+    OsType = properties.osType
+| order by tostring(TimeCreated) desc
+```
+
+### List all VM's running longer than a year
+This is important if you want to see which VMs could be good for reserved instances or savings plans.
+
+```kql
+Resources
+| where type == "microsoft.compute/virtualmachines"
+| extend CreatedTime = todatetime(properties.timeCreated)
+| where CreatedTime < ago(365d)
+| project 
+    VMName = name,
+    ResourceGroup = resourceGroup,
+    Location = location,
+    CreatedTime,
+    AgeInDays = datetime_diff('day', now(), CreatedTime),
+    OS = properties.storageProfile.osDisk.osType
+| order by CreatedTime asc
+```
+
 ## Check long running VMs without Resource Reservation
 Check with Azure Cost Management
 
