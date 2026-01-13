@@ -98,12 +98,3 @@ Resources
     OS = properties.storageProfile.osDisk.osType
 | order by CreatedTime asc
 ```
-
-## Check long running VMs without Resource Reservation
-Check with Azure Cost Management
-
-1. Go to Cost Management + Billing -> Cost Analysis.
-2. In the view settings (top), change "Actual Cost" to Amortized Cost.
-3. Group By: Pricing Model (This is the magic filter).
-4. Add Filter: Resource Type = virtual machines.
-5. Add Filter: Pricing Model = On Demand.
